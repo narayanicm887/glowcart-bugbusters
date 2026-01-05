@@ -1,0 +1,181 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<title>GlowCart</title>
+
+<style>
+* { box-sizing: border-box; }
+
+body {
+    margin: 0;
+    font-family: 'Poppins', sans-serif;
+    background: linear-gradient(135deg, #667eea, #764ba2);
+    color: #333;
+}
+
+header {
+    background: linear-gradient(to right, #ff758c, #ff7eb3);
+    padding: 25px;
+    text-align: center;
+    color: white;
+}
+
+header h1 {
+    margin: 0;
+    font-size: 2.5rem;
+}
+
+.products {
+    padding: 30px;
+    display: grid;
+    grid-template-columns: repeat(auto-fit, minmax(220px, 1fr));
+    gap: 25px;
+}
+
+.card {
+    background: white;
+    border-radius: 18px;
+    padding: 18px;
+    box-shadow: 0 15px 25px rgba(0,0,0,0.15);
+    transition: transform 0.3s;
+}
+
+.card:hover {
+    transform: translateY(-5px);
+}
+
+.price {
+    color: #ff4d6d;
+    font-weight: bold;
+}
+
+button {
+    background: linear-gradient(to right, #36d1dc, #5b86e5);
+    border: none;
+    color: white;
+    padding: 10px;
+    width: 100%;
+    border-radius: 12px;
+    cursor: pointer;
+}
+
+.cart {
+    background: white;
+    margin: 30px;
+    padding: 25px;
+    border-radius: 18px;
+    box-shadow: 0 15px 25px rgba(0,0,0,0.15);
+}
+
+.cart-item {
+    padding: 10px;
+    border-bottom: 1px dashed #ccc;
+}
+
+footer {
+    text-align: center;
+    padding: 15px;
+    color: white;
+    opacity: 0.8;
+}
+</style>
+</head>
+
+<body>
+
+<header>
+    <h1>✨ GlowCart</h1>
+    <p>Bright UI. Dark logic.</p>
+</header>
+
+<div class="products" id="products"></div>
+
+<div class="cart">
+    <h2>🛒 Your Cart</h2>
+    <div id="cartItems">Your cart feels lonely.</div>
+    <h3>Total: ₹<span id="total">0</span></h3>
+</div>
+
+<footer>
+    © 2026 GlowCart
+</footer>
+
+<script>
+const products = [
+    {name:"Sneakers", price:1999},
+    {name:"Laptop", price:64999},
+    {name:"Headphones", price:3499},
+    {name:"Smartphone", price:27999},
+    {name:"Smart Watch", price:5999},
+    {name:"Backpack", price:1799},
+    {name:"Mechanical Keyboard", price:2499},
+    {name:"Gaming Mouse", price:1299},
+    {name:"Sunglasses", price:999},
+    {name:"Water Bottle", price:699}
+];
+
+let total = 0;
+let cartHTML = "";
+
+products.forEach((p,i)=>{
+    document.getElementById("products").innerHTML += `
+        <div class="card">
+            <h3>${p.name}</h3>
+            <p class="price">₹${p.price}</p>
+            <label>Quantity</label>
+            <input type="number" value="1" min="1" max="5" id="qty${i}">
+            <br><br>
+            <button onclick="addToCart(${i})">Add to Cart</button>
+        </div>
+    `;
+});
+
+function addToCart(index) {
+
+    let qty = Number(document.getElementById("qty"+index).value);
+    let basePrice = products[index].price;
+
+    /* BUG 1: Quantity logic mismatch */
+    if (qty > 3) qty = 1;
+
+    /* BUG 2: Random product name */
+    let displayItem = products[Math.floor(Math.random()*products.length)].name;
+
+    /* BUG 3: Random price override */
+    let price = basePrice;
+    if (Math.random() > 0.6) price = 99;
+
+    /* BUG 4: Subtotal miscalculation */
+    let subtotal = price * qty;
+    if (Math.random() > 0.7) subtotal -= 500;
+
+    /* BUG 5: Total calculation error */
+    total += subtotal;
+    if (Math.random() > 0.8) total -= 1000;
+
+    /* BUG 6: Negative totals allowed */
+    if (document.getElementById("cartItems").innerText.includes("lonely")) {
+        document.getElementById("cartItems").innerHTML = "";
+    }
+
+    cartHTML += `
+        <div class="cart-item">
+            <strong>${displayItem}</strong><br>
+            Price: ₹${price}<br>
+            Qty: ${qty}<br>
+            Subtotal: ₹${subtotal}
+        </div>
+    `;
+
+    document.getElementById("cartItems").innerHTML = cartHTML;
+    document.getElementById("total").innerText = total;
+
+    /* BUG 7 & 8: Duplicate success messages */
+    alert("Item added to cart!");
+    alert("Added successfully!");
+}
+</script>
+
+</body>
+</html>
